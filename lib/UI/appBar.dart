@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AllBar {
-  AllBar();
-
-  Widget myappBar(Color color1,Color color2, String title, IconData ico,String path) {
+  AllBar(this.context);
+  final BuildContext context;
+// AppBAr ajusté sur toutes les pages
+  Widget myappBar( Color color1,Color color2, String title, IconData ico) {
     return AppBar(
       centerTitle: true,
       title: Text(
@@ -14,8 +15,7 @@ class AllBar {
         IconButton(
           icon: new Icon(ico,color: Colors.white,size: 32,),
           onPressed: () {
-//            TODO: methode pour retourner à l'accueil
-            print(path);
+            Navigator.pushNamed(context, '/home');
           },
         ),
       ],

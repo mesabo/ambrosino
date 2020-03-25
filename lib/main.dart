@@ -1,4 +1,4 @@
-import 'package:ambrosino/UI/accueil.dart';
+import 'package:ambrosino/UI/HOME/home.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -14,11 +14,10 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.lightBlue.shade100,
         fontFamily: 'Ubuntu',
       ),
-      //home: HomePage(title: 'Flutter Demo Home Page'),
+//      Je difinie ici mes différents chemin d'accès aux pages.
       initialRoute: '/home',
       routes: {
         '/home': (context) => HomePage(),
-        //'/commande': (context) => CommandePage(),
       },
     );
   }
