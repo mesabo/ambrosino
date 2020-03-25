@@ -11,9 +11,10 @@ import 'DEPENSE/depense.dart';
 
 class DisplayRoutePageFromGrid extends StatelessWidget {
   final String routeList;
+  final String titleList;
 
 // le constructeur
-  DisplayRoutePageFromGrid(this.routeList);
+  DisplayRoutePageFromGrid(this.routeList, this.titleList);
 
 //  Instanciation de tous les widget à utiliser
   CommandePage _commandePage = new CommandePage();
@@ -38,32 +39,32 @@ class DisplayRoutePageFromGrid extends StatelessWidget {
   Widget _getPageState(BuildContext buildContext) {
     switch (routeList) {
       case '/commande':
-        return _commandePage.scaffoldMethod(buildContext);
+        return _commandePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/vente':
-        return _ventePage.scaffoldMethod(buildContext);
+        return _ventePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/depense':
-        return _depensePage.scaffoldMethod(buildContext);
+        return _depensePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/comptabilite':
-        return _comptabilitePage.scaffoldMethod(buildContext);
+        return _comptabilitePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/statistique':
-        return _statistiquePage.scaffoldMethod(buildContext);
+        return _statistiquePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/client':
-        return _clientPage.scaffoldMethod(buildContext);
+        return _clientPage.scaffoldMethod(buildContext, titleList);
         break;
       case '/parametre':
-        return _parametrePage.scaffoldMethod(buildContext);
+        return _parametrePage.scaffoldMethod(buildContext, titleList);
         break;
       case '/aide':
-        return _aidePage.scaffoldMethod(buildContext);
+        return _aidePage.scaffoldMethod(buildContext, titleList);
         break;
 
       default:
-        return _aidePage.scaffoldMethod(buildContext);
+        return _aidePage.scaffoldMethod(buildContext, titleList);
         break;
     }
   }

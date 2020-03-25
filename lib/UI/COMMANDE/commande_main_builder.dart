@@ -1,29 +1,29 @@
 import 'package:ambrosino/UI/WIDGETS/custom_color.dart';
-import 'package:ambrosino/UI/display_route_page_from_home.dart';
 import 'package:flutter/material.dart';
 
 import '../WIDGETS/custom_icons.dart';
 import '../WIDGETS/custom_route.dart';
 import '../WIDGETS/custom_title.dart';
+import 'display_route_page_from_commande.dart';
 
-class GridViewBuilderWidget extends StatelessWidget {
-  const GridViewBuilderWidget({
+class CommandMainBuilderWidget extends StatelessWidget {
+  const CommandMainBuilderWidget({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 //    instancier la liste des images
-    List<IconData> _iconList = CustomIcons().getGridIconList();
+    List<IconData> _iconList = CustomIcons().getCommandeIconList();
 //    de meme pour les textes associés
-    List<String> _titleList = GridTitle().getGridTitleList();
+    List<String> _titleList = GridTitle().getCommandeTitleList();
     //    de meme pour les textes associés
-    List<Color> _colorList = CustomColor().getGridColorList();
+    List<Color> _colorList = CustomColor().getCommandeColorList();
     //    de meme pour les textes associés
-    List<String> _routeList = GridRoute().getGridRouteList();
+    List<String> _routeList = GridRoute().getCommandeRouteList();
 
     return GridView.builder(
-      itemCount: 8,
+      itemCount: 3,
       padding: EdgeInsets.all(8.0),
       gridDelegate:
           SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400.0),
@@ -57,9 +57,8 @@ class GridViewBuilderWidget extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        DisplayRoutePageFromGrid(_routeList[index],_titleList[index])),
+                        DisplayRoutePageFromCommande(_routeList[index],_titleList[index])),
               );
-
             },
           ),
         );

@@ -1,7 +1,7 @@
 import 'package:ambrosino/UI/WIDGETS/appBar.dart';
 import 'package:flutter/material.dart';
 
-class ClientPage {
+class VenteHistoriquePage {
   Scaffold scaffoldMethod(BuildContext b, String titleList) {
     AllBar _bar = new AllBar(b);
     return Scaffold(
