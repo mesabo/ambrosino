@@ -42,7 +42,7 @@ flutter:
      - family: DroidSans
        fonts:
          - asset: assets/fonts/DroidSans.ttf
-         - asset: fonts/DroidSans.ttf-Bold.ttf
+         - asset: assets/fonts/DroidSans-Bold.ttf
            style: italic
      - family: Ubuntu
        fonts:
@@ -50,7 +50,7 @@ flutter:
            weight: 700
      - family: UbuntuMono
        fonts:
-         - asset: assets/fonts/UbuntuMono.ttf
+         - asset: assets/fonts/UbuntuMono-RI.ttf
            weight: 500
      - family: Exo
        fonts:
