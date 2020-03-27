@@ -1,3 +1,5 @@
+import 'package:ambrosino/DATA/Blocs/produit_bloc.dart';
+import 'package:ambrosino/DATA/Services/produit_service.dart';
 import 'package:ambrosino/UI/WIDGETS/appBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,13 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
   TextEditingController _dateEditingController = new TextEditingController();
   TextEditingController _quantiteEditingController =
       new TextEditingController();
+  TextEditingController _prixEditingController = new TextEditingController();
+  TextEditingController _articleEditingController = new TextEditingController();
+
   GlobalKey<FormState> _globalKey = new GlobalKey<FormState>();
+  List<Produit> _produitList;
+  GlobalKey<ScaffoldState> _scaffoldKey;
+  ProduitService _produitService;
 
   String dateT = DateFormat.yMMMd().format(DateTime.now());
 
@@ -34,12 +42,38 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
   @override
   void initState() {
     super.initState();
+    _produitList = [];
+    _prixEditingController = new TextEditingController();
+    _articleEditingController = new TextEditingController();
+    _quantiteEditingController = new TextEditingController();
+    _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
+    _getProduits();
+
     _globalKey = new GlobalKey<FormState>();
     _nameEditingController = new TextEditingController();
     _phoneEditingController = new TextEditingController();
     _lieuEditingController = new TextEditingController();
     _dateEditingController = new TextEditingController();
-    _quantiteEditingController = new TextEditingController();
+  }
+
+  _createTable() {
+    ProduitService.createProduitTable().then((result) {
+      if ('success' == result) {
+        print(result);
+        // Table is created successfully.
+//        _showSnackBar(result);
+//        _showProgress(widget.title);
+      }
+    });
+  }
+
+  _getProduits() {
+    ProduitService.getProduits().then((produits) {
+      setState(() {
+        _produitList = produits;
+      });
+      print("Length ${produits.length}");
+    });
   }
 
   @override
@@ -170,51 +204,46 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
                       ],
                     ),
                   ),
+                  RaisedButton(onPressed: (){_createTable();},child: Text('CREER LA TABLE'),),
                   Center(
                     child: DataTable(
                         sortColumnIndex: 0,
                         sortAscending: true,
                         columns: [
+                          DataColumn(label: Text('N°')),
                           DataColumn(label: Text('Articles')),
                           DataColumn(label: Text('Prix Unitaire')),
                           DataColumn(label: Text('Quantité achetée')),
                           DataColumn(label: Text('Totaux montants')),
                         ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(Text('data')),
-                            DataCell(Text('data')),
-                            DataCell(Text('data')),
-                            DataCell(Text('data')),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('gggjjj')),
-                            DataCell(Center(child: Text('gggjjj'))),
-                            DataCell(Center(child: Text('gggjjj'))),
-                            DataCell(Center(child: Text('gggjjj'))),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text('$_value')),
-                            DataCell(Text('$_value')),
-                            DataCell(Text('$_value')),
-                            DataCell(
-                              ListTile(
-                                trailing: IconButton(
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    size: 48,
-                                  ),
-                                  onPressed: () {
-                                    String value =
-                                        _quantiteEditingController.value.text;
-                                    _onChanged(value);
-                                  },
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ]),
-                  )
+                        rows: _produitList
+                            .map((produits) => DataRow(cells: [
+                                  DataCell(Text(produits.id.toString())),
+                                  DataCell(Text(produits.article.toString())),
+                                  DataCell(Text(produits.prixu.toString())),
+                                  DataCell(ListTile(
+                                    trailing: IconButton(icon: Icon(Icons.chevron_right), onPressed: (){
+                                      _onChanged(_quantiteEditingController.text);
+                                    }),
+                                    title: Container(
+                                      width: 100,
+                                      child: TextFormField(
+                                        controller: _quantiteEditingController,
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          hintText: '____',
+                                        ),
+                                        textAlign: TextAlign.end,
+                                        keyboardType: TextInputType.numberWithOptions(
+                                            decimal: false, signed: false),
+                                        autovalidate: true,
+                                      ),
+                                    ),
+                                  )),
+                                  DataCell(Text(_value)),
+                                ]))
+                            .toList()),
+                  ),
                 ],
               ),
             )),
@@ -224,11 +253,11 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
 
   GridTile _gridTile;
 
-  String _value;
+  String _value = '0000';
 
   void _onChanged(String value) {
     setState(() {
-      int val = int.parse(value) * 10;
+      int val = int.parse(value) * 400;
       _value = '$val';
     });
   }
