@@ -1,14 +1,25 @@
 import 'package:ambrosino/UI/WIDGETS/appBar.dart';
 import 'package:flutter/material.dart';
 
-class CommandeHistoriquePage {
-  Scaffold scaffoldMethod(BuildContext b, String titleList) {
-    AllBar _bar = new AllBar(b);
+class CommandeHistoriquePage extends StatefulWidget {
+  final String title;
+
+  CommandeHistoriquePage(this.title);
+
+  @override
+  _CommandeHistoriquePageState createState() => _CommandeHistoriquePageState();
+}
+
+class _CommandeHistoriquePageState extends State<CommandeHistoriquePage> {
+  @override
+  Widget build(BuildContext context) {
+    AllBar _bar = new AllBar(context);
     return Scaffold(
       appBar: _bar.myappBar(Colors.lightBlue, Colors.lightBlueAccent.shade100,
-          titleList, Icons.home),
+          widget.title, Icons.home),
       body: Container(
         color: Colors.lightGreen.shade100,
+        child: Text(widget.title),
       ),
     );
   }

@@ -10,24 +10,27 @@ class AllBar {
     return AppBar(
       centerTitle: true,
       title: Text(
-        "$title".toUpperCase(),
+        "$title",
         style: TextStyle(
           color: Colors.black,
-          fontSize: 32.0,
+          fontSize: 48.0,
         ),
       ),
       actions: <Widget>[
-        IconButton(
-          icon: new Icon(
-            ico,
-            color: Colors.white,
-            size: 32,
+        Padding(
+          padding: const EdgeInsets.only(right:30.0),
+          child: IconButton(
+            icon: new Icon(
+              ico,
+              color: Colors.white,
+              size: 64,
+            ),
+            onPressed: () {
+              //Navigator.popAndPushNamed(context, '/home');
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/home', (Route<dynamic> route) => false);
+            },
           ),
-          onPressed: () {
-            //Navigator.popAndPushNamed(context, '/home');
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/home', (Route<dynamic> route) => false);
-          },
         ),
       ],
       elevation: 0.0,

@@ -33,4 +33,24 @@ class GridTitle {
       ..add("Caisse produits");
     return titleList;
   }
+
+  //  AJOUTER COMMANDE DATATABLE ITEMS TITLE
+  List<String> getAjouterCommandeTitleList() {
+    titleList
+      ..add("ARTICLE")
+      ..add("PRIX UNITAIRE")
+      ..add("QUATITÉ")
+      ..add("PRIX TOTAUX");
+    return titleList;
+  }
+
+  //  AJOUTER COMMANDE DATATABLE ROWS ITEMS TITLE
+  List<String> getAjouterCommandeTitleRowList() {
+    titleList
+      ..add("ARTICLE")
+      ..add("PRIX UNITAIRE")
+      ..add("QUATITÉ")
+      ..add("PRIX TOTAUX");
+    return titleList;
+  }
 }
