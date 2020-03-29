@@ -15,6 +15,9 @@ class CommandeAjouterPage extends StatefulWidget {
 }
 
 class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
+  int _radioValue;
+  var echo;
+
   TextEditingController _nameEditingController = new TextEditingController();
   TextEditingController _phoneEditingController = new TextEditingController();
   TextEditingController _lieuEditingController = new TextEditingController();
@@ -39,14 +42,9 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
   TextEditingController _totalEditingController15 = new TextEditingController();
   TextEditingController _totauxEditingController15 =
       new TextEditingController();
-  TextEditingController _avanceEditingController =
-      new TextEditingController();
+  TextEditingController _avanceEditingController = new TextEditingController();
 
   GlobalKey<FormState> _globalKey = new GlobalKey<FormState>();
-
-//  List<Produit> _produitList;
-//  GlobalKey<ScaffoldState> _scaffoldKey;
-//  ProduitService _produitService;
 
   String dateT = DateFormat.yMMMd().format(DateTime.now());
 
@@ -85,9 +83,8 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
     _avanceEditingController = new TextEditingController();
 
     _radioValue = 1;
+    _handleRadioValueChange(_radioValue);
     echo = 'AVANCE';
-    _isButtonEnable = false;
-    _enableOrDesable();
   }
 
   @override
@@ -106,399 +103,17 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-//                    LIGNE CONTENANT NOMS ET TELEPHONE
-                  child: Row(
-                    children: <Widget>[
-//                        NOMS COMPLET
-                      Flexible(
-                        child: TextFormField(
-                          controller: _nameEditingController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            prefixIcon: Icon(Icons.person),
-                          ),
-                          textAlign: TextAlign.start,
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: false, signed: false),
-                          autovalidate: true,
-                          maxLength: 50,
-                          validator: (String value) {
-                            if (value.isEmpty) {
-                              return 'Noms requis !';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.0,
-                      ),
-//                        TELEPHONE PORTABLE
-                      Flexible(
-                        child: TextFormField(
-                          controller: _phoneEditingController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            prefixText: '+225',
-                            prefixIcon: Icon(Icons.phone),
-                            //hintText: '57777500',
-                          ),
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.phone,
-                          autovalidate: true,
-                          maxLength: 8,
-                          validator: (String value) {
-                            if (((value.isNotEmpty) && (value.length < 8)) ||
-                                value.length > 8) {
-                              return 'Entrer un téléphone valide';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                buildPaddingRow1(),
 //                  DATE DE LA COMMANDE
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: TextFormField(
-                          controller: _lieuEditingController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            hintText: 'Lieu de livraison',
-                            prefixIcon: Icon(Icons.place),
-                          ),
-                          textAlign: TextAlign.start,
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: false, signed: false),
-                          autovalidate: true,
-                          maxLength: 100,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 30.0,
-                      ),
-                      Flexible(
-                        child: TextFormField(
-                          controller: _dateEditingController,
-                          decoration: InputDecoration(
-                              helperText:
-                                  'Click sur le bouton à droite pour sélectionner la date',
-                              filled: true,
-                              hintText: '$dateT',
-                              suffixIcon: IconButton(
-                                  icon: Icon(Icons.date_range),
-                                  onPressed: () async {
-                                    DateTime newDateTime =
-                                        await showRoundedDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate:
-                                          DateTime(DateTime.now().year - 1),
-                                      lastDate:
-                                          DateTime(DateTime.now().year + 1),
-                                      borderRadius: 20,
-                                    );
-                                    if (newDateTime != null) {
-                                      String selectedDate = DateFormat.yMMMd()
-                                          .format(newDateTime);
-                                      changeTheDate(selectedDate);
-                                    }
-                                  })),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                buildPaddingRow2(context),
 //                 TABLEAU POUR EDITER LA QUANTITÉ ACHETÉE
-                Center(
-                  child: DataTable(columns: [
-                    DataColumn(
-                        label: Text(
-                      'Articles',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 20.0),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Prix',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 20.0),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Quantités',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 20.0),
-                    )),
-                    DataColumn(
-                        label: Text(
-                      'Totaux',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 20.0),
-                    )),
-                  ], rows: [
-//                     ROW QUATITE 50
-                    DataRow(cells: [
-                      DataCell(Text(
-                        "AWA 50",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 18.0),
-                      )),
-                      DataCell(Text("400",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 18.0))),
-                      DataCell(ListTile(
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.chevron_right,
-                              color: Colors.red,
-                              size: 48,
-                            ),
-                            onPressed: () {
-                              _onChanged_Q50(_quantiteEditingController50.text);
-                              _onChangedTotaux(
-                                  _quantiteEditingController50.text,
-                                  _quantiteEditingController25.text,
-                                  _quantiteEditingController15.text);
-                            }),
-                        title: Container(
-                          width: 100,
-                          child: TextFormField(
-                            controller: _quantiteEditingController50,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
-                            decoration: InputDecoration(
-                              filled: true,
-                              hintText: '____',
-                            ),
-                            textAlign: TextAlign.end,
-                            keyboardType: TextInputType.numberWithOptions(
-                                decimal: false, signed: false),
-                            autovalidate: true,
-                          ),
-                        ),
-                      )),
-                      DataCell(Text(
-                        '$_valueAwa50 FCFA',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontSize: 18.0),
-                      )),
-                    ]),
-                    //                     ROW QUATITE 25
-                    DataRow(cells: [
-                      DataCell(Text(
-                        "AWA 25",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 18.0),
-                      )),
-                      DataCell(Text("600",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 18.0))),
-                      DataCell(ListTile(
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.chevron_right,
-                              color: Colors.red,
-                              size: 48,
-                            ),
-                            onPressed: () {
-                              _onChanged_Q25(_quantiteEditingController25.text);
-                              _onChangedTotaux(
-                                  _quantiteEditingController50.text,
-                                  _quantiteEditingController25.text,
-                                  _quantiteEditingController15.text);
-                            }),
-                        title: Container(
-                          width: 100,
-                          child: TextFormField(
-                            controller: _quantiteEditingController25,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
-                            decoration: InputDecoration(
-                              filled: true,
-                              hintText: '____',
-                            ),
-                            textAlign: TextAlign.end,
-                            keyboardType: TextInputType.numberWithOptions(
-                                decimal: false, signed: false),
-                            autovalidate: true,
-                          ),
-                        ),
-                      )),
-                      DataCell(Text(
-                        '$_valueAwa25 FCFA',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontSize: 18.0),
-                      )),
-                    ]),
-//                                          ROW QUATITE 15
-                    DataRow(cells: [
-                      DataCell(Text(
-                        "AWA 15",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 18.0),
-                      )),
-                      DataCell(Text("300",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 18.0))),
-                      DataCell(ListTile(
-                        trailing: IconButton(
-                            icon: Icon(
-                              Icons.chevron_right,
-                              color: Colors.red,
-                              size: 48,
-                            ),
-                            onPressed: () {
-                              _onChanged_Q15(_quantiteEditingController15.text);
-                              _onChangedTotaux(
-                                  _quantiteEditingController50.text,
-                                  _quantiteEditingController25.text,
-                                  _quantiteEditingController15.text);
-                            }),
-                        title: Container(
-                          width: 100,
-                          child: TextFormField(
-                            controller: _quantiteEditingController15,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
-                            decoration: InputDecoration(
-                              filled: true,
-                              hintText: '____',
-                            ),
-                            textAlign: TextAlign.end,
-                            keyboardType: TextInputType.numberWithOptions(
-                                decimal: false, signed: false),
-                            autovalidate: true,
-                          ),
-                        ),
-                      )),
-                      DataCell(Text(
-                        '$_valueAwa15 FCFA',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontSize: 18.0),
-                      )),
-                    ]),
-                  ]),
-                ),
+                _buildDataTable(),
 //                  CALCUL ET AFFICHAGE DU PRIX TOTAL DES PRODUITS
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FlatButton(
-                          onPressed: () {
-                            _onChangedTotaux(
-                                _quantiteEditingController50.text,
-                                _quantiteEditingController25.text,
-                                _quantiteEditingController15.text);
-                          },
-                          child: Text(
-                            'Afficher montant total',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueGrey,
-                                letterSpacing: 1.5,
-                                fontSize: 24.0),
-                          )),
-                      Text(
-                        "$_totaux FCFA",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Exo',
-                            color: Colors.blueGrey.shade900,
-                            letterSpacing: 1.5,
-                            fontSize: 24.0),
-                      ),
-                    ],
-                  ),
-                ),
-// CHOISIR LE TYPE DE RÈGLEMENT
+                buildTotauxMontants(),
+//                  CHOISIR LE TYPE DE RÈGLEMENT
                 new Padding(padding: new EdgeInsets.all(5.0)),
-                Column(
-                  children: <Widget>[
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Radio(
-                          value: 0,
-                          groupValue: _radioValue,
-                          onChanged: _handleRadioValueChange,
-                        ),
-                        new Text('CASH'),
-                        new Radio(
-                          value: 1,
-                          groupValue: _radioValue,
-                          onChanged: _handleRadioValueChange,
-                        ),
-                        new Text('AVANCE'),
-                        new Radio(
-                          value: 2,
-                          groupValue: _radioValue,
-                          onChanged: _handleRadioValueChange,
-                        ),
-                        new Text('CREDIT'),
-                      ],
-                    ),
-                    echo == 'AVANCE'
-                        ? Container(
-                            width: 400.0,
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                new Text('Entrer le montant avancé'),
-                                Flexible(
-                                    child: TextField(onChanged: (value){
-                                      setState(() {
-                                       if ((_nameEditingController.text).isNotEmpty) {
-                                         _isButtonEnable = true;
-//                                         TODO: SYNCHRONISER LES SAISIE POUR NOM , AVANCE ET BTN SAVE
-                                       }
-                                      });
-                                    },
-                                  textAlign: TextAlign.end,
-                                  decoration: InputDecoration.collapsed(
-                                      hintText: '0000'),
-                                ))
-                              ],
-                            ),
-                          )
-                        : Text('')
-                  ],
-                ),
-                Container(
-                  width: 400,
-                  child: _isButtonEnable ? RaisedButton(
-                    elevation: 16,
-                    child: Text('ENREGISTRER LA COMMANDE'),
-                  ):Text('ENTRER LES DONNeES POUR ENREGISTRER'),
-                )
+                buildColumnTypeReglement(),
+                buildBtnSave()
               ],
             ),
           )),
@@ -507,23 +122,411 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
     );
   }
 
-  bool _isButtonEnable = false;
-
-  void _enableOrDesable() {
-    setState(() {
-      String getName = _nameEditingController.text;
-      String getAvance = _avanceEditingController.text;
-      if (getName.isEmpty || (echo=='AVANCE' && getAvance.isEmpty)) {
-        _isButtonEnable = false;
-      }else{
-        _isButtonEnable = true;
-      }
-    });
+  RaisedButton buildBtnSave() {
+    return RaisedButton(
+      color: Colors.blue,
+      elevation: 16,
+      child: Text(
+        'ENREGISTRER LA COMMANDE',
+        style: TextStyle(
+            fontSize: 24,
+            fontFamily: 'Exo',
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {saveCommande();},
+    );
   }
 
-  int _radioValue;
+  Column buildColumnTypeReglement() {
+    return Column(
+      children: <Widget>[
+        new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                new Radio(
+                  value: 0,
+                  groupValue: _radioValue,
+                  onChanged: _handleRadioValueChange,
+                ),
+                new Text('CASH',style: TextStyle(fontSize: 32,color: Colors.green.shade800),),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                new Radio(
+                  value: 1,
+                  groupValue: _radioValue,
+                  onChanged: _handleRadioValueChange,
+                ),
+                new Text('AVANCE',style: TextStyle(fontSize: 32,color: Colors.orange),),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                new Radio(
+                  value: 2,
+                  groupValue: _radioValue,
+                  onChanged: _handleRadioValueChange,
+                ),
+                new Text('CREDIT',style: TextStyle(fontSize: 32,color: Colors.red),),
+              ],
+            ),
+          ],
+        ),
+        echo == 'AVANCE'
+            ? new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Text('Entrer le montant avancé:',style: TextStyle(fontSize: 32,color: Colors.blueGrey)),
+                Flexible(
+                    child: TextField(
+                  onChanged: (value) {},
+                  textAlign: TextAlign.end,
+                  decoration: InputDecoration.collapsed(hintText: '0000',hintStyle: TextStyle(
+                    fontSize: 32,color: Colors.black
+                  )),
+                ))
+              ],
+            )
+            : Text('')
+      ],
+    );
+  }
 
-  var echo;
+  Padding buildTotauxMontants() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          FlatButton(
+              onPressed: () {
+                _onChangedTotaux(
+                    _quantiteEditingController50.text,
+                    _quantiteEditingController25.text,
+                    _quantiteEditingController15.text);
+                _onChanged_Q50(_quantiteEditingController50.text);
+                _onChanged_Q25(_quantiteEditingController25.text);
+                _onChanged_Q15(_quantiteEditingController15.text);
+              },
+              child: Text(
+                'Afficher montant total',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey,
+                    letterSpacing: 1.5,
+                    fontSize: 24.0),
+              )),
+          Text(
+            "$_totaux FCFA",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Exo',
+                color: Colors.blueGrey.shade900,
+                letterSpacing: 1.5,
+                fontSize: 24.0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Center _buildDataTable() {
+    return Center(
+      child: DataTable(columns: [
+        DataColumn(
+            label: Text(
+          'Articles',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        )),
+        DataColumn(
+            label: Text(
+          'Prix',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        )),
+        DataColumn(
+            label: Text(
+          'Quantités',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        )),
+        DataColumn(
+            label: Text(
+          'Totaux',
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+        )),
+      ], rows: [
+//                     ROW QUATITE 50
+        DataRow(cells: [
+          DataCell(Text(
+            "AWA 50",
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0),
+          )),
+          DataCell(Text("400",
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0))),
+          DataCell(ListTile(
+            trailing: IconButton(
+                icon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.red,
+                  size: 48,
+                ),
+                onPressed: () {
+                  _onChanged_Q50(_quantiteEditingController50.text);
+                  _onChangedTotaux(
+                      _quantiteEditingController50.text,
+                      _quantiteEditingController25.text,
+                      _quantiteEditingController15.text);
+                }),
+            title: Container(
+              width: 100,
+              child: TextFormField(
+                controller: _quantiteEditingController50,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: '____',
+                ),
+                textAlign: TextAlign.end,
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal: false, signed: false),
+                autovalidate: true,
+              ),
+            ),
+          )),
+          DataCell(Text(
+            '$_valueAwa50 FCFA',
+            textAlign: TextAlign.end,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+                fontSize: 18.0),
+          )),
+        ]),
+        //                     ROW QUATITE 25
+        DataRow(cells: [
+          DataCell(Text(
+            "AWA 25",
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0),
+          )),
+          DataCell(Text("600",
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0))),
+          DataCell(ListTile(
+            trailing: IconButton(
+                icon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.red,
+                  size: 48,
+                ),
+                onPressed: () {
+                  _onChanged_Q25(_quantiteEditingController25.text);
+                  _onChangedTotaux(
+                      _quantiteEditingController50.text,
+                      _quantiteEditingController25.text,
+                      _quantiteEditingController15.text);
+                }),
+            title: Container(
+              width: 100,
+              child: TextFormField(
+                controller: _quantiteEditingController25,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: '____',
+                ),
+                textAlign: TextAlign.end,
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal: false, signed: false),
+                autovalidate: true,
+              ),
+            ),
+          )),
+          DataCell(Text(
+            '$_valueAwa25 FCFA',
+            textAlign: TextAlign.end,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+                fontSize: 18.0),
+          )),
+        ]),
+//                                          ROW QUATITE 15
+        DataRow(cells: [
+          DataCell(Text(
+            "AWA 15",
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0),
+          )),
+          DataCell(Text("300",
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18.0))),
+          DataCell(ListTile(
+            trailing: IconButton(
+                icon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.red,
+                  size: 48,
+                ),
+                onPressed: () {
+                  _onChanged_Q15(_quantiteEditingController15.text);
+                  _onChangedTotaux(
+                      _quantiteEditingController50.text,
+                      _quantiteEditingController25.text,
+                      _quantiteEditingController15.text);
+                }),
+            title: Container(
+              width: 100,
+              child: TextFormField(
+                controller: _quantiteEditingController15,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: '____',
+                ),
+                textAlign: TextAlign.end,
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal: false, signed: false),
+                autovalidate: true,
+              ),
+            ),
+          )),
+          DataCell(Text(
+            '$_valueAwa15 FCFA',
+            textAlign: TextAlign.end,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+                fontSize: 18.0),
+          )),
+        ]),
+      ]),
+    );
+  }
+
+  Padding buildPaddingRow2(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: TextFormField(
+              controller: _lieuEditingController,
+              decoration: InputDecoration(
+                filled: true,
+                hintText: 'Lieu de livraison',
+                prefixIcon: Icon(Icons.place),
+              ),
+              textAlign: TextAlign.start,
+              keyboardType: TextInputType.numberWithOptions(
+                  decimal: false, signed: false),
+              autovalidate: true,
+              maxLength: 100,
+            ),
+          ),
+          SizedBox(
+            width: 30.0,
+          ),
+          Flexible(
+            child: TextFormField(
+              controller: _dateEditingController,
+              decoration: InputDecoration(
+                  helperText:
+                      'Click sur le bouton à droite pour sélectionner la date',
+                  filled: true,
+                  hintText: '$dateT',
+                  suffixIcon: IconButton(
+                      icon: Icon(Icons.date_range),
+                      onPressed: () {
+                        _showDatePickerMethod(context);
+                      })),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future _showDatePickerMethod(BuildContext context) async {
+    DateTime newDateTime = await buildShowRoundedDatePicker(context);
+    if (newDateTime != null) {
+      String selectedDate = DateFormat.yMMMd().format(newDateTime);
+      changeTheDate(selectedDate);
+    }
+  }
+
+  Future<DateTime> buildShowRoundedDatePicker(BuildContext context) {
+    return showRoundedDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(DateTime.now().year - 1),
+      lastDate: DateTime(DateTime.now().year + 1),
+      borderRadius: 20,
+    );
+  }
+
+  Padding buildPaddingRow1() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+//                    LIGNE CONTENANT NOMS ET TELEPHONE
+      child: Row(
+        children: <Widget>[
+//                        NOMS COMPLET
+          Flexible(
+            child: TextFormField(
+              controller: _nameEditingController,
+              decoration: InputDecoration(
+                filled: true,
+                prefixIcon: Icon(Icons.person),
+              ),
+              textAlign: TextAlign.start,
+              keyboardType: TextInputType.numberWithOptions(
+                  decimal: false, signed: false),
+              autovalidate: true,
+              maxLength: 50,
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Noms requis !';
+                } else {
+                  return null;
+                }
+              },
+            ),
+          ),
+          SizedBox(
+            width: 30.0,
+          ),
+//                        TELEPHONE PORTABLE
+          Flexible(
+            child: TextFormField(
+              controller: _phoneEditingController,
+              decoration: InputDecoration(
+                filled: true,
+                prefixText: '+225',
+                prefixIcon: Icon(Icons.phone),
+                //hintText: '57777500',
+              ),
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.phone,
+              autovalidate: true,
+              maxLength: 8,
+              validator: (String value) {
+                if (((value.isNotEmpty) && (value.length < 8)) ||
+                    value.length > 8) {
+                  return 'Entrer un téléphone valide';
+                } else {
+                  return null;
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _handleRadioValueChange(int value) {
     setState(() {
@@ -534,18 +537,19 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
           break;
         case 1:
           echo = 'AVANCE';
-
+          _onChangedTotaux(
+              _quantiteEditingController50.text,
+              _quantiteEditingController25.text,
+              _quantiteEditingController15.text);
           break;
         case 2:
           echo = 'CREDIT';
-
           break;
       }
 
       print('echo: $echo');
     });
 //    VERIFICATION SI LES ENTÉES SONT CORRECTES POUR ACTIVER LE BOUTON SAVE
-    _enableOrDesable();
   }
 
   String _valueAwa50 = '0000';
@@ -576,6 +580,18 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
   }
 
   void _onChangedTotaux(String v1, String v2, String v3) {
+    print('AVANT =>  v1=$v1 : v2=$v2 : v3=$v3');
+
+    if (v1.isEmpty) {
+      v1 = '0';
+    }
+    if (v2.isEmpty) {
+      v2 = '0';
+    }
+    if (v3.isEmpty) {
+      v3 = '0';
+    }
+    print('APRÈS =>   v1=$v1 : v2=$v2 : v3=$v3');
     setState(() {
       int total =
           (int.parse(v1) * 400) + (int.parse(v2) * 600) + (int.parse(v3) * 300);
@@ -589,6 +605,36 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
   void _onChangedCheckBox(String value) {
     setState(() {
       radioItem = value;
+    });
+  }
+
+  void saveCommande() {
+    setState(() {
+      String getName = _nameEditingController.text;
+      String getAvance = _avanceEditingController.text;
+      String getQuantite1 = _quantiteEditingController50.text;
+      String getQuantite2 = _quantiteEditingController25.text;
+      String getQuantite3 = _quantiteEditingController15.text;
+      if (getAvance.isEmpty) {
+        getAvance = '0';
+      }
+
+      int avance = int.parse(getAvance);
+      int tot = int.parse(_totaux);
+
+      if (getQuantite1.isNotEmpty || getQuantite2.isNotEmpty || getQuantite3.isNotEmpty) {
+        switch (echo) {
+          case 'CASH':
+           print('CETTE COMMANDE EST PAYÉE EN CASH');
+            break;
+          case 'AVANCE':
+            print('CETTE COMMANDE EST PAYÉE EN AVANCE');
+            break;
+          case 'CREDIT':
+            print('CETTE COMMANDE EST À CRÉDIT');
+            break;
+        }
+      }
     });
   }
 }
@@ -630,3 +676,4 @@ class _CommandeAjouterPageState extends State<CommandeAjouterPage> {
                                   DataCell(Text(_valueAwa50)),
                                 ]))
                             .toList()),*/
+
