@@ -1,68 +1,52 @@
-import 'package:ambrosino/UI/WIDGETS/custom_color.dart';
+import 'package:ambrosino/BLOC/helper_methods.dart';
+import 'package:ambrosino/UI/VENTE/ROUTES/vente_list.dart';
 import 'package:flutter/material.dart';
 
-import '../WIDGETS/custom_icons.dart';
-import '../WIDGETS/custom_route.dart';
-import '../WIDGETS/custom_title.dart';
-import 'display_route_page_from_vente.dart';
+import 'ROUTES/vente_ajouter.dart';
+import 'ROUTES/vente_historique.dart';
 
 class VenteMainBuilderWidget extends StatelessWidget {
-  const VenteMainBuilderWidget({
+  VenteMainBuilderWidget({
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-//    instancier la liste des images
-    List<IconData> _iconList = CustomIcons().getVenteIconList();
-//    de meme pour les textes associés
-    List<String> _titleList = GridTitle().getVenteTitleList();
-    //    de meme pour les textes associés
-    List<Color> _colorList = CustomColor().getVenteColorList();
-    //    de meme pour les textes associés
-    List<String> _routeList = GridRoute().getVenteRouteList();
+    HelperMethods helperMethods = new HelperMethods(context);
+    return Scaffold(
+      body: Center(
+        child: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            children: <Widget>[
+//              AJOUTER COMMANDE ROUTE PAGE
+              helperMethods.buildContainerItem(
+                  Colors.lightBlue,
+                  Icons.add_circle,
+                  'Ajouter Vente',
+                  VenteAjouterPage('Ajouter Vente')),
 
-    return GridView.builder(
-      itemCount: 4,
-      padding: EdgeInsets.all(8.0),
-      gridDelegate:
-          SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400.0),
-      itemBuilder: (BuildContext context, int index) {
-        //print('_buildGridViewBuilder $index');
-        return Card(
-          color: Colors.lightGreen.shade50,
-          margin: EdgeInsets.all(8.0),
-          child: InkWell(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  _iconList[index],
-                  size: 96.0,
-                  color: _colorList[index],
-                ),
-                Divider(),
-                Text(
-                  _titleList[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 48.0,
-                  ),
-                )
-              ],
-            ),
-            onTap: () {
-//              print(_routeList[index]);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        DisplayRoutePageFromVente(_routeList[index],_titleList[index])),
-              );
-            },
+//              AJOUTER COMMANDE ROUTE PAGE
+              helperMethods.buildContainerItem(Colors.blueGrey, Icons.list,
+                  'Lister vente', VenteListPage('Lister vente')),
+
+//              AJOUTER COMMANDE ROUTE PAGE
+              helperMethods.buildContainerItem(
+                  Colors.orange,
+                  Icons.history,
+                  'Historique vente',
+                  VenteHistoriquePage('Historique vente')),
+//                 AJOUTER COMMANDE ROUTE PAGE
+              helperMethods.buildContainerItem(
+                  Colors.orange,
+                  Icons.monetization_on,
+                  'Caisse vente',
+                  VenteHistoriquePage('Caisse vente')),
+            ],
           ),
-        );
-      },
+        )),
+      ),
     );
   }
 }

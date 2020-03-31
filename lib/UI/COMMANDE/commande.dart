@@ -10,7 +10,7 @@ class CommandePage {
       appBar: _bar.myappBar(Colors.lightBlue, Colors.lightBlueAccent.shade100,
           titleList, Icons.home),
       body: SafeArea(
-        child: const CommandMainBuilderWidget(),
+        child:  CommandMainBuilderWidget(),
       ),
     );
   }
