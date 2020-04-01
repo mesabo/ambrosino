@@ -3,6 +3,7 @@ import 'package:ambrosino/UI/VENTE/ROUTES/vente_list.dart';
 import 'package:flutter/material.dart';
 
 import 'ROUTES/vente_ajouter.dart';
+import 'ROUTES/vente_caisse.dart';
 import 'ROUTES/vente_historique.dart';
 
 class VenteMainBuilderWidget extends StatelessWidget {
@@ -39,10 +40,10 @@ class VenteMainBuilderWidget extends StatelessWidget {
                   VenteHistoriquePage('Historique vente')),
 //                 AJOUTER COMMANDE ROUTE PAGE
               helperMethods.buildContainerItem(
-                  Colors.orange,
+                  Colors.lightGreen,
                   Icons.monetization_on,
                   'Caisse vente',
-                  VenteHistoriquePage('Caisse vente')),
+                  VenteCaissePage('Caisse vente')),
             ],
           ),
         )),

@@ -6,11 +6,16 @@ import '../WIDGETS/custom_icons.dart';
 import '../WIDGETS/custom_route.dart';
 import '../WIDGETS/custom_title.dart';
 
-class GridViewBuilderWidget extends StatelessWidget {
+class GridViewBuilderWidget extends StatefulWidget {
   const GridViewBuilderWidget({
     Key key,
   }) : super(key: key);
 
+  @override
+  _GridViewBuilderWidgetState createState() => _GridViewBuilderWidgetState();
+}
+
+class _GridViewBuilderWidgetState extends State<GridViewBuilderWidget> {
   @override
   Widget build(BuildContext context) {
 //    instancier la liste des images

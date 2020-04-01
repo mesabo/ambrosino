@@ -2,14 +2,26 @@ import 'package:ambrosino/UI/HOME/home.dart';
 import 'package:ambrosino/tutorias/listview/gridListview.dart';
 import 'package:ambrosino/tutorias/listview/home_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'tutorias/listviewJson/listViewUI.dart';
 import 'tutorias/radio_button.dart';
 
-void main() => runApp(MyApp());
+void main() {
 
-class MyApp extends StatelessWidget {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
